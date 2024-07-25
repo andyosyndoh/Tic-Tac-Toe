@@ -12,7 +12,7 @@ func main() {
 		PrintBoard(board)
 		row , col := GetPoints(currentplayer)
 		board[row][col] = currentplayer
-		if CheckWin(board) {
+		if CheckWin(board, currentplayer) {
 			PrintBoard(board)
 			fmt.Printf("Player %v Wins!!!", currentplayer)
 			break
@@ -68,6 +68,21 @@ func GetPoints(currentplayer string) (int, int){
 	return row, col
 }
 
-func CheckWin(board [][]string) bool {
-	if CheckColumn(board)
+func CheckWin(board [][]string, player string) bool {
+	if board[1][1] == player && board[1][2] == player && board[1][3] == player {
+		return true
+	}
+	if board[2][1] == player && board[2][2] == player && board[2][3] == player {
+		return true
+	}
+	if board[3][1] == player && board[3][2] == player && board[3][3] == player {
+		return true
+	}
+	if board[1][1] == player && board[2][2] == player && board[3][3] == player {
+		return true
+	}
+	if board[3][1] == player && board[2][2] == player && board[1][3] == player {
+		return true
+	}
+	return false
 } 
