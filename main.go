@@ -7,10 +7,17 @@ import (
 func main() {
 	board  := CreateBoard()
 	fmt.Println(board)
-	// currentplayer := "X"
+	currentplayer := "X"
 	for {
 		PrintBoard(board)
-		break
+		row , col := GetPoints(currentplayer)
+		board[row][col] = currentplayer
+		if CheckWin(board) {
+			PrintBoard(board)
+			fmt.Printf("Player %v Wins!!!", currentplayer)
+			break
+		}
+		
 	}
 }
 
@@ -44,3 +51,23 @@ func PrintBoard(board [][]string){
 		
 	}
 }
+
+func GetPoints(currentplayer string) (int, int){
+	var col , row int
+	for {
+		fmt.Printf("Its Players %v turn\n", currentplayer)
+		fmt.Println("Choose the column:")
+		fmt.Scan(&col)
+		fmt.Println("Choose the Row:")
+		fmt.Scan(&row)
+		if (row == 1 || row == 2 || row == 3) &&  (col == 1 || col == 2 || col == 3) {
+			break
+		}
+		fmt.Println("Wrong choice of input Please choose again")
+	}
+	return row, col
+}
+
+func CheckWin(board [][]string) bool {
+	if CheckColumn(board)
+} 
