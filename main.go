@@ -7,7 +7,11 @@ import (
 func main() {
 	board  := CreateBoard()
 	fmt.Println(board)
-	
+	// currentplayer := "X"
+	for {
+		PrintBoard(board)
+		break
+	}
 }
 
 func CreateBoard() [][]string {
@@ -28,4 +32,15 @@ func CreateBoard() [][]string {
 	board[3][0] = "3"
 
 	return board
+}
+
+func PrintBoard(board [][]string){
+	for _, line := range board {
+		for _, str := range line {
+			fmt.Print(str)
+			fmt.Print(" ")
+		}
+		fmt.Println()
+		
+	}
 }
