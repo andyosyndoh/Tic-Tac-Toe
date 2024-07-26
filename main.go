@@ -35,6 +35,7 @@ func TwoPlayers() {
 	for {
 		fmt.Println("\033[2J\033[H")
 		PrintBoard(board)
+		fmt.Printf("Its Players %v turn\n", currentplayer)
 		row, col := GetPoints(currentplayer)
 		board[row][col] = currentplayer
 		if CheckWin(board, currentplayer) {
@@ -85,7 +86,6 @@ func PrintBoard(board [][]string) {
 func GetPoints(currentplayer string) (int, int) {
 	var col, row int
 	for {
-		fmt.Printf("Its Players %v turn\n", currentplayer)
 		fmt.Println("Choose the column:")
 		fmt.Scan(&col)
 		fmt.Println("Choose the Row:")
