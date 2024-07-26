@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 			os.Exit(0)
 		}
 		fmt.Println("Wrong Choice.Please Choose Again")
-		attempts ++
+		attempts++
 	}
 
 }
@@ -36,45 +36,139 @@ func TwoPlayers() {
 		PrintBoard(board)
 		fmt.Printf("Its Players %v turn\n", currentplayer)
 		row, col := GetPoints(currentplayer)
-		board[row][col] = currentplayer
+		board[row][col] = currentplayer + " "
 		if CheckWin(board, currentplayer) {
 			fmt.Println("\033[2J\033[H")
 			PrintBoard(board)
 			fmt.Printf("Player %v Wins!!!\n", currentplayer)
-			break
+			os.Exit(0)
 		}
-		currentplayer = ChangePlayer(currentplayer)
+		if canContinue(board) {
+			currentplayer = ChangePlayer(currentplayer)
+		} else {
+			fmt.Println("Game Over")
+			os.Exit(0)
+		}
 	}
 }
 
 func OnePlayer() {
 	board := CreateBoard()
 	currentplayer := "X"
-	row,col := 0,0
+	row, col := 0, 0
 	for {
-		fmt.Println("\033[2J\033[H")
+		// fmt.Println("\033[2J\033[H")
 		PrintBoard(board)
 		if currentplayer == "X" {
 			fmt.Printf("Your Turn\n")
 			row, col = GetPoints(currentplayer)
-		}
-		if currentplayer == "0" {
+		} else if currentplayer == "0" {
 			fmt.Printf("Computer's Turn\n")
-			row,col = Getcomputer(board)
+			row, col = Getcomputer(board)
 		}
-		board[row][col] = currentplayer
+		board[row][col] = currentplayer + " "
 		if CheckWin(board, currentplayer) {
-			fmt.Println("\033[2J\033[H")
+			// fmt.Println("\033[2J\033[H")
 			PrintBoard(board)
 			fmt.Printf("Player %v Wins!!!\n", currentplayer)
-			break
+			os.Exit(0)
 		}
+		// if canContinue(board) {
 		currentplayer = ChangePlayer(currentplayer)
+		// } else {
+		// 	fmt.Println("Game Over")
+		// 	os.Exit(0)
+		// }
+
 	}
 }
 
-func Getcomputer(board [][]string) {
-	
+func canContinue(board [][]string) bool {
+	for i := range board {
+		for j := range board[i] {
+			if board[i][j] == " " {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func Getcomputer(board [][]string) (int, int) {
+
+	temp := board
+	row, col, err := Mywin(temp)
+	if err == nil {
+		fmt.Println("mine")
+		return row, col
+	} else {
+		row, col, err = OppWin(temp)
+		if err == nil {
+			fmt.Println("opp")
+			return row, col
+		} else {
+			row, col, err = CloseWin(temp)
+			if err == nil {
+				fmt.Println("close")
+				return row, col
+			} else {
+				row, col = Place(temp)
+				return row, col
+			}
+		}
+	}
+}
+
+func Mywin(board [][]string) (int, int, error) {
+	for i := range board {
+		for j := range board[i] {
+			if board[i][j] == " " {
+				board[i][j] = "0"
+				if CheckWin(board, "0") {
+					return j, i, nil
+				}
+				board[i][j] = " "
+			}
+		}
+	}
+	return 0, 0, fmt.Errorf("not valid")
+}
+
+func OppWin(board [][]string) (int, int, error) {
+	for i := range board {
+		for j := range board[i] {
+			if board[i][j] == " " {
+				board[i][j] = "X"
+				if CheckWin(board, "X") {
+					return j, i, nil
+				}
+				board[i][j] = " "
+			}
+		}
+	}
+	return 0, 0, fmt.Errorf("not valid")
+}
+
+func CloseWin(board [][]string) (int, int, error) {
+	for i := range board {
+		for j := range board[i] {
+			if board[i][j] == " " {
+				
+			}
+		}
+	}
+	return 0, 0, fmt.Errorf("not valid")
+}
+
+func Place(board [][]string) (int, int) {
+	for i := range board {
+		for j := range board[i] {
+			if board[i][j] == " " {
+				return j, i
+			}
+		}
+	}
+	return 0, 0
 }
 
 func CreateBoard() [][]string {
