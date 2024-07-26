@@ -35,8 +35,8 @@ func TwoPlayers() {
 		fmt.Println("\033[2J\033[H")
 		PrintBoard(board)
 		fmt.Printf("Its Players %v turn\n", currentplayer)
-		row, col := GetPoints(currentplayer)
-		board[row][col] = currentplayer + " "
+		row, col := GetPoints(currentplayer, board)
+		board[row][col] = currentplayer
 		if CheckWin(board, currentplayer) {
 			fmt.Println("\033[2J\033[H")
 			PrintBoard(board)
@@ -57,28 +57,28 @@ func OnePlayer() {
 	currentplayer := "X"
 	row, col := 0, 0
 	for {
-		// fmt.Println("\033[2J\033[H")
+		fmt.Println("\033[2J\033[H")
 		PrintBoard(board)
 		if currentplayer == "X" {
 			fmt.Printf("Your Turn\n")
-			row, col = GetPoints(currentplayer)
+			row, col = GetPoints(currentplayer , board)
 		} else if currentplayer == "0" {
 			fmt.Printf("Computer's Turn\n")
 			row, col = Getcomputer(board)
 		}
-		board[row][col] = currentplayer + " "
+		board[row][col] = currentplayer
 		if CheckWin(board, currentplayer) {
-			// fmt.Println("\033[2J\033[H")
+			fmt.Println("\033[2J\033[H")
 			PrintBoard(board)
 			fmt.Printf("Player %v Wins!!!\n", currentplayer)
 			os.Exit(0)
 		}
-		// if canContinue(board) {
+		if canContinue(board) {
 		currentplayer = ChangePlayer(currentplayer)
-		// } else {
-		// 	fmt.Println("Game Over")
-		// 	os.Exit(0)
-		// }
+		} else {
+			fmt.Println("Game Over")
+			os.Exit(0)
+		}
 
 	}
 }
@@ -109,7 +109,8 @@ func Getcomputer(board [][]string) (int, int) {
 		} else {
 			row, col, err = CloseWin(temp)
 			if err == nil {
-				fmt.Println("close")
+				fmt.Println(row,col)
+
 				return row, col
 			} else {
 				row, col = Place(temp)
@@ -153,7 +154,24 @@ func CloseWin(board [][]string) (int, int, error) {
 	for i := range board {
 		for j := range board[i] {
 			if board[i][j] == " " {
-				
+				board[i][j] = "0"
+				countConnections := 0
+				if i > 0 && board[i-1][j] == "0" {
+					countConnections++
+				}
+				if i < len(board)-1 && board[i+1][j] == "0" {
+					countConnections++
+				}
+				if j > 0 && board[i][j-1] == "0" {
+					countConnections++
+				}
+				if j < len(board[i])-1 && board[i][j+1] == "0" {
+					countConnections++
+				}
+				if countConnections > 0 {
+					return j, i, nil
+				}
+				board[i][j] = " "
 			}
 		}
 	}
@@ -195,25 +213,25 @@ func PrintBoard(board [][]string) {
 	for _, line := range board {
 		for _, str := range line {
 			fmt.Print(str)
-			fmt.Print(" ")
 		}
 		fmt.Println()
 
 	}
 }
 
-func GetPoints(currentplayer string) (int, int) {
+func GetPoints(currentplayer string, board [][]string) (int, int) {
 	var col, row int
 	for {
 		fmt.Println("Choose the column:")
 		fmt.Scan(&col)
 		fmt.Println("Choose the Row:")
 		fmt.Scan(&row)
-		if (row == 1 || row == 2 || row == 3) && (col == 1 || col == 2 || col == 3) {
+		if (row == 1 || row == 2 || row == 3) && (col == 1 || col == 2 || col == 3) && board[row][col] == " " {
 			break
 		}
+		fmt.Println("\033[2J\033[H")
+		PrintBoard(board)
 		fmt.Println("Wrong choice of input Please choose again")
-		row, col = 0, 0
 	}
 	return row, col
 }
