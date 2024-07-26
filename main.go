@@ -30,7 +30,6 @@ func main() {
 
 func TwoPlayers() {
 	board := CreateBoard()
-	fmt.Println(board)
 	currentplayer := "X"
 	for {
 		fmt.Println("\033[2J\033[H")
@@ -49,7 +48,22 @@ func TwoPlayers() {
 }
 
 func OnePlayer() {
-
+	board := CreateBoard()
+	currentplayer := "X"
+	for {
+		fmt.Println("\033[2J\033[H")
+		PrintBoard(board)
+		fmt.Printf("Its Players %v turn\n", currentplayer)
+		row, col := GetPoints(currentplayer)
+		board[row][col] = currentplayer
+		if CheckWin(board, currentplayer) {
+			fmt.Println("\033[2J\033[H")
+			PrintBoard(board)
+			fmt.Printf("Player %v Wins!!!\n", currentplayer)
+			break
+		}
+		currentplayer = ChangePlayer(currentplayer)
+	}
 }
 
 func CreateBoard() [][]string {
