@@ -8,7 +8,7 @@ import (
 func main() {
 	var mode string
 	var attempts int
-
+	fmt.Println("\033[2J\033[H")
 	fmt.Println("Welcome To Tic-tac-toe,Please choose your preffered mode:\n1.Two Players\n2.One Player")
 	for {
 		fmt.Scan(&mode)
